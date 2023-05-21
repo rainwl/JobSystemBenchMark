@@ -1,0 +1,16 @@
+
+.idea/.idea.JOB/.idea/
+
+*.csproj
+
+Library/
+
+Logs/
+
+obj/Debug/
+
+ProjectSettings/
+
+Temp/
+
+*.sln
