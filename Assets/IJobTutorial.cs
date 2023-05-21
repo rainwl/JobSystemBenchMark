@@ -1,14 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.Collections;
 using UnityEngine;
+using Unity.Jobs;
+
+public struct ExpensiveCalculation : IJob
+{
+    public NativeArray<float> Value;
+
+    public void Execute()
+    {
+        for (int i = 0; i < 100000; i++)
+        {
+            Value[0] = Mathf.Sqrt(Mathf.Pow(10, 100000f)) / 10000000f;
+        }
+    }
+}
+
 
 public class IJobTutorial : MonoBehaviour
 {
     void Update()
     {
-        for (int i = 0; i < 100000; i++)
+        NativeArray<float> _Value = new NativeArray<float>(1, Allocator.TempJob);
+        ExpensiveCalculation job = new ExpensiveCalculation()
         {
-            var f = Mathf.Sqrt(Mathf.Pow(10, 100000f)) / 10000000f;
-        }
+            Value = _Value
+        };
+        JobHandle jobHandle = job.Schedule();
+        jobHandle.Complete();
+        Debug.Log(job.Value[0]);
+        _Value.Dispose();
     }
 }
